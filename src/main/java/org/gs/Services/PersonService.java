@@ -13,10 +13,20 @@ public class PersonService {
         return Person.listAll();
     }
 
+    public String getPersonByMail(String mail){
+        Person temp = Person.find("mail", mail).firstResult();
+        if(temp != null){
+            return "Error";
+        } else return "ok";
+    }
+
     @Transactional
     public Person addPerson(Person newPerson){
-        newPerson.persist();
-        return newPerson;
+        String response = getPersonByMail(newPerson.getMail());
+        if(response == "ok") {
+            newPerson.persist();
+            return newPerson;
+        }else return null;
     }
 
     @Transactional
