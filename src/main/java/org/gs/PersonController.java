@@ -6,6 +6,7 @@ import org.gs.entity.Person;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/clients")
@@ -28,7 +29,7 @@ public class PersonController {
 
     @Path("/{id}")
     @DELETE
-    public String deleteType(Long id){
+    public Response deletePerson(Long id){
         return personService.deletePerson(id);
     }
 }

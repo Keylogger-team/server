@@ -1,10 +1,15 @@
 package org.gs.Services;
 
 import org.gs.entity.Person;
+import org.gs.exceptions.KeyloggerException;
 
 import javax.inject.Singleton;
+import javax.persistence.PersistenceException;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static org.gs.config.Values.*;
 
 @Singleton
 public class PersonService {
@@ -13,25 +18,29 @@ public class PersonService {
         return Person.listAll();
     }
 
-    public String getPersonByMail(String mail){
-        Person temp = Person.find("mail", mail).firstResult();
-        if(temp != null){
-            return "Error";
-        } else return "ok";
-    }
-
     @Transactional
     public Person addPerson(Person newPerson){
-        String response = getPersonByMail(newPerson.getMail());
-        if(response == "ok") {
-            newPerson.persist();
-            return newPerson;
-        }else return null;
+        try {
+            Person temp = Person.find("mail", newPerson.getMail()).firstResult();
+            if (temp == null)
+                newPerson.persistAndFlush();
+            else throw new KeyloggerException(MESSAGE_EMAIL);
+        }catch (PersistenceException e){
+            throw e;
+        }
+        return newPerson;
     }
 
     @Transactional
-    public String deletePerson(Long id){
-        Person.deleteById(id);
-        return "ok";
+    public Response deletePerson(Long id){
+        try {
+            Person.delete("id", id);
+        }catch (PersistenceException e) {
+            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+                throw new KeyloggerException(e.getCause().getCause().getMessage());
+            }
+            throw e;
+        }
+        return Response.status(Response.Status.OK).build();
     }
 }
