@@ -27,7 +27,6 @@ public class ListService {
     @Transactional
     public ListNote addNote(ListNote note){
         try {
-            if (note.getNote() == null) throw new KeyloggerException("временная затычка");
             note.persistAndFlush();
         }catch (PersistenceException e){
             if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {

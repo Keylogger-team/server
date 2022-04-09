@@ -4,6 +4,7 @@ import org.gs.Services.ListService;
 import org.gs.entity.ListNote;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,11 +24,11 @@ public class ListController {
     }
 
     @POST
-    public ListNote addList(ListNote note){
+    public ListNote addList(@Valid ListNote note){
         return listService.addNote(note);
     }
 
-    @Path("/{id}")//удалять лист через id
+    @Path("/{id}")
     @DELETE
     public Response deleteList(Long id){
         return listService.deleteNote(id);

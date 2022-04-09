@@ -4,6 +4,7 @@ import org.gs.Services.PersonService;
 import org.gs.entity.Person;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -23,7 +24,7 @@ public class PersonController {
     }
 
     @POST
-    public Person addPerson(Person newPerson){
+    public Person addPerson(@Valid Person newPerson){
         return personService.addPerson(newPerson);
     }
 
