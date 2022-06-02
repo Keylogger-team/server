@@ -1,6 +1,6 @@
 package org.gs.Services;
 
-import org.gs.entity.ListNote;
+import org.gs.entity.Task;
 import org.gs.exceptions.KeyloggerException;
 
 import javax.inject.Singleton;
@@ -10,39 +10,39 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Singleton
-public class ListService {
+public class TaskService {
 
-    public List<ListNote> getListNotes(Long id) {
-        return id == null ? getAll() : getListNotesById(id);
+    public List<Task> getListTask(Long id){
+        return id == null ? getAll() : getListTaskById(id);
     }
 
-    private List<ListNote> getAll(){
-        return ListNote.listAll();
+    private List<Task> getAll(){
+        return Task.listAll();
     }
 
-    public List<ListNote> getListNotesById(Long id){
-        return ListNote.find("person_id = ?1", id).list(); //поиск всех заметок конкретного пользователя
+    public List<Task> getListTaskById(Long id){
+        return Task.find("person_id = ?1", id).list(); //все таски пользователя
     }
 
     @Transactional
-    public ListNote addNote(ListNote note){
+    public Task addTask(Task task){
         try {
-            note.persistAndFlush();
+            task.persistAndFlush();
         }catch (PersistenceException e){
             if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
                 throw new KeyloggerException(e.getCause().getCause().getMessage());
             }
             throw e;
         }
-        return note;
+        return task;
     }
 
     @Transactional
-    public Response deleteNote(Long id){
+    public Response deleteTask(Long person){
         try {
-            ListNote.delete("id", id);
-        }catch (PersistenceException e) {
-            if (e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+            Task.delete("person_id = ?1", person);
+        }catch (PersistenceException e){
+            if(e.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
                 throw new KeyloggerException(e.getCause().getCause().getMessage());
             }
             throw e;

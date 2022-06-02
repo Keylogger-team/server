@@ -12,7 +12,8 @@ import java.util.List;
 
 @Path("/clients")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+//@Consumes(MediaType.APPLICATION_JSON)
+@Consumes("application/json")
 public class PersonController {
 
     @Inject

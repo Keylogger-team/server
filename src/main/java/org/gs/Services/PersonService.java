@@ -22,8 +22,10 @@ public class PersonService {
     public Person addPerson(Person newPerson){
         try {
             Person temp = Person.find("mail", newPerson.getMail()).firstResult();
-            if (temp == null)
+            if (temp == null) {
                 newPerson.persistAndFlush();
+                System.out.println(newPerson);
+            }
             else throw new KeyloggerException(MESSAGE_EMAIL);
         }catch (PersistenceException e){
             throw e;
